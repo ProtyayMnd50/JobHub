@@ -40,7 +40,6 @@ const Header = () => {
               Login
             </Button>
           </SignedOut>
-          {/* UserButton Menuitems not working */}
           <SignedIn>
             {user?.unsafeMetadata?.role === "recruiter" && (
               <Link to="/post-job">
@@ -59,15 +58,14 @@ const Header = () => {
             >
               <UserButton.MenuItems>
                 <UserButton.Link
+                  href="/my-jobs" // Correctly placed href
                   label="My jobs"
-                  labelIcon={
-                    <BriefcaseBusinessIcon size={15} href="/my-jobs" />
-                  }
+                  labelIcon={<BriefcaseBusinessIcon size={15} />} // Icon only, no href here
                 />
-
                 <UserButton.Link
+                  href="/saved-jobs" // Correctly placed href
                   label="Saved jobs"
-                  labelIcon={<HeartIcon size={15} href="/saved-jobs" />}
+                  labelIcon={<HeartIcon size={15} />} // Icon only, no href here
                 />
               </UserButton.MenuItems>
             </UserButton>
