@@ -3,7 +3,8 @@ import { getJobs } from "@/api/apiJobs";
 import { useSession, useUser } from "@clerk/clerk-react";
 import useFetch from "@/hooks/use-fetch";
 import { BarLoader } from "react-spinners";
-
+import JobCard from "@/components/job-card";
+// import { JobCard } from "../components/job-card";
 const JobListing = () => {
   // const { session } = useSession();
 
@@ -66,14 +67,14 @@ const JobListing = () => {
         <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
       )}
       {loadingJobs === false && (
-        <div>
+        // problem here in responsiveness, fix it later
+        <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Jobs?.length ? (
             <div>
-              {Jobs.map((job, index) => (
-                <span key={index}>{job.title}</span>
-
-                // <JobCard/>
-              ))}
+              {Jobs.map((job, index) => {
+                // <span key={index}>{job.title}</span>
+                return <JobCard key={job.id} job={job} />;
+              })}
             </div>
           ) : (
             <div>No jobs found 😔</div>
