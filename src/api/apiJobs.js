@@ -3,7 +3,9 @@ import supabaseClient from "@/utils/supabase";
 export async function getJobs(token, { location, company_id, searchQuery }) {
   const supabase = await supabaseClient(token);
 
-  let query = supabase.from("jobs").select("*"); //take everything from jobs table
+  let query = supabase
+    .from("jobs")
+    .select("*,company:companies(name,logo_url),saved:saved_jobs(id)"); //company (name,logo_url) plus saved jobs accessed through query modification
 
   if (location) {
     //if location is present
