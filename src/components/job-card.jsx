@@ -9,16 +9,36 @@ import {
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { MapPinIcon, Trash2Icon, Heart } from "lucide-react";
+import { saveJob } from "@/api/apiJobs";
+import useFetch from "@/hooks/use-fetch";
+import { useEffect, useState } from "react";
 const JobCard = ({
   job,
   isMyJob = false,
   savedInit = false,
   onJobSaved = () => {},
 }) => {
+  const [saved, setSaved] = useState(savedInit);
+  const {
+    fn: fnSavedJob,
+    data: savedJob,
+    loading: loadingSavedJob,
+  } = useFetch(saveJob, { alreadySaved: saved });
+
   const { user } = useUser();
+  const handleSaveJob = async () => {
+    await fnSavedJob({
+      user_id: user.id,
+      job_id: job.id,
+    }),
+      onJobSaved();
+  };
+  useEffect(() => {
+    if (savedJob !== undefined) setSaved(savedJob?.length > 0);
+  }, [savedJob]);
   return (
-    <Card>
-      <CardHeader>
+    <Card className="flex flex-col">
+      <CardHeader className="flex">
         <CardTitle className="flex justify-between font-bold">
           {job.title}
           {!isMyJob && (
@@ -42,12 +62,26 @@ const JobCard = ({
         {job.description.substring(0, job.description.indexOf("."))}
       </CardContent>
       <CardFooter className="flex gap-2">
-        <Link to={"/jobs/${job.id}"} className="flex-1">
+        {/* made changes in this line please revert it it to  -> <Link to={`/job/${job.id}`} className="flex-1"></Link> */}
+        <Link to={`/jobs/`} className="flex-1">
           <Button variant="secondary" className="w-full">
             More Details
           </Button>
+          {!isMyJob && (
+            <Button
+              variant="outline"
+              className="w-15"
+              onClick={handleSaveJob}
+              disabled={loadingSavedJob}
+            >
+              {saved ? (
+                <Heart size={20} stroke="red" fill="red" />
+              ) : (
+                <Heart size={20} />
+              )}
+            </Button>
+          )}
         </Link>
-        <Heart size={20} stroke="red" fill="red" />
       </CardFooter>
     </Card>
   );
