@@ -1,19 +1,37 @@
 import supabaseClient from "@/utils/supabase";
+import { State, City } from "country-state-city";
 
 export async function getJobs(token, { location, company_id, searchQuery }) {
+  console.log(location);
+  console.log(company_id);
+  console.log(searchQuery);
+  const states = State.getStatesOfCountry("IN"); //all states of country
+
+  const statesnCode = [...states.map((state) => [state.name, state.isoCode])];
+  function getStateIsoCode(location) {
+    const state = statesnCode.find(([name]) => name === location);
+    return state ? state[1] : "State not found"; // Return ISO code or error message
+  }
+  const locationISO = getStateIsoCode(location); // Get ISO code for location (state)
+  const allstatesofCities = City.getCitiesOfState("IN", locationISO); //get all cities of states object format
+  const sirfcities = allstatesofCities.map((state) => state.name); //all state names
+  if (location === "Karnataka") sirfcities.push("Bangalore");
+  console.log(locationISO);
+  console.log(sirfcities);
   const supabase = await supabaseClient(token);
 
   let query = supabase
     .from("jobs")
-    .select("*,company:companies(name,logo_url),saved:saved_jobs(id)"); //company (name,logo_url) plus saved jobs accessed through query modification
+    .select("*, saved: saved_jobs(id), company: companies(name,logo_url)");
 
   if (location) {
     //if location is present
-    query = query.eq("location", location);
+    query = query.in("location", sirfcities);
+    // query = query.ilike("location", "Noida");
   }
   if (company_id) {
     //if company_id is present
-    query = query.eq("location", location);
+    query = query.eq("company_id", company_id);
   }
   if (searchQuery) {
     //if search query is present
@@ -96,4 +114,22 @@ export async function saveJob(token, { alreadySaved }, saveData) {
     console.error("Unexpected error: ", err.message);
     return null;
   }
+}
+
+export async function getSingleJob(token, { job_id }) {
+  const supabase = await supabaseClient(token);
+  const { data, error } = await supabase
+    .from("jobs")
+    .select(
+      "*, company: companies(name,logo_url), applications:applications(*)"
+    )
+    .eq("id", job_id)
+    .single();
+
+  if (error) {
+    console.error("error fetching comapany", error);
+    return null;
+  }
+
+  return data;
 }

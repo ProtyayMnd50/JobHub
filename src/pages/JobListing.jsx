@@ -16,9 +16,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { State } from "country-state-city";
+import { State, City } from "country-state-city";
 
-// import { JobCard } from "../components/job-card";
+// console.log(State.getStatesOfCountry("IN"));
+// console.log(City.getCitiesOfState("IN", "TG"));
+
 const JobListing = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("");
@@ -29,7 +31,7 @@ const JobListing = () => {
     data: Jobs,
     loading: loadingJobs,
   } = useFetch(getJobs, { location, company_id, searchQuery });
-  console.log(Jobs);
+  // console.log(Jobs);
   // console.log(loadingJobs);
 
   const { fn: fnCompanies, data: companies } = useFetch(getCompanies);
@@ -55,6 +57,11 @@ const JobListing = () => {
     if (query) setSearchQuery(query);
   };
 
+  const clearFilters = () => {
+    setSearchQuery("");
+    setCompany_id("");
+    setLocation("");
+  };
   if (!isLoaded) {
     //what to display if screen not loaded yet
     return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
@@ -65,8 +72,6 @@ const JobListing = () => {
       <h1 className="gradient-title font-extrabold text-6xl sm:text-7xl text-center pb-8">
         Latest Jobs
       </h1>
-
-      {/* add filters here */}
 
       <form
         onSubmit={handleSearch}
@@ -83,45 +88,52 @@ const JobListing = () => {
           Search
         </Button>
       </form>
+      {/* add filters here */}
+      <div className="flex flex-col sm:flex-row gap-2">
+        <Select value={location} onValueChange={(value) => setLocation(value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Filter by Location" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {State.getStatesOfCountry("IN").map(({ name }) => {
+                return (
+                  <SelectItem key={name} value={name}>
+                    {name}
+                  </SelectItem>
+                );
+              })}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
 
-      <Select value={location} onValueChange={(value) => setLocation(value)}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select a state" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {State.getStatesOfCountry("IN").map(({ name }) => {
-              return (
-                <SelectLabel value={name} key={name}>
-                  {name}
-                </SelectLabel>
-              );
-            })}
-            {/* <SelectItem value="apple">Apple</SelectItem> */}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      {/*
-      <Select
-        value={company_id}
-        onValueChange={(value) => setCompany_id(value)}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Filter by company" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {companies.map(({ name }) => {
-              return (
-                <SelectLabel value={name} key={name}>
-                  {name}
-                </SelectLabel>
-              );
-            })}
-
-          </SelectGroup>
-        </SelectContent>
-      </Select> */}
+        <Select
+          value={company_id}
+          onValueChange={(value) => setCompany_id(value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Filter by Company" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {companies?.map(({ name, id }) => {
+                return (
+                  <SelectItem key={name} value={id}>
+                    {name}
+                  </SelectItem>
+                );
+              })}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Button
+          className="sm:w-1/2"
+          variant="destructive"
+          onClick={clearFilters}
+        >
+          Clear Filters
+        </Button>
+      </div>
 
       {loadingJobs && (
         <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
