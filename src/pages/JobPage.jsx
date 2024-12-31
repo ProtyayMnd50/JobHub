@@ -1,11 +1,18 @@
-import { getSingleJob } from "@/api/apiJobs";
+import { getSingleJob, updateHiringStatus } from "@/api/apiJobs";
 import useFetch from "@/hooks/use-fetch";
 import { useUser } from "@clerk/clerk-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { BarLoader } from "react-spinners";
 import { MapPin, Briefcase, DoorOpen, DoorClosed } from "lucide-react";
 import MDEditor from "@uiw/react-md-editor";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 const JobPage = () => {
   const { isLoaded, user } = useUser();
   const { id } = useParams();
@@ -18,6 +25,15 @@ const JobPage = () => {
   useEffect(() => {
     if (isLoaded) fnJob();
   }, [isLoaded]);
+
+  const { loading: loadingHiringStatus, fn: fnHiringStatus } = useFetch(
+    updateHiringStatus,
+    { job_id: id }
+  );
+  const handleStatusChange = (value) => {
+    const isOpen = value === "open";
+    fnHiringStatus(isOpen).then(() => fnJob());
+  };
 
   if (!isLoaded || loadingJob) {
     return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
@@ -59,6 +75,24 @@ const JobPage = () => {
         </div>
       </div>
       {/* hiring status */}
+      {!loadingHiringStatus && <BarLoader width={"100%"} color="#36d7b7" />}
+      {job?.recruiter_id === user?.id && (
+        <Select value={location} onValueChange={handleStatusChange}>
+          <SelectTrigger
+            className={`w-full ${job?.isOpen ? "bg-green-950" : "bg-red-950"}`}
+          >
+            <SelectValue
+              placeholder={
+                "Hiring status" + (job?.isOpen ? "(Open )" : "(Closed)")
+              }
+            />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="open">Open</SelectItem>
+            <SelectItem value="closed">Closed</SelectItem>
+          </SelectContent>
+        </Select>
+      )}
 
       <h2 className="text-2xl sm:text-3xl font-bold">About the job</h2>
       <p className="sm:text-lg">{job?.description}</p>
@@ -69,6 +103,9 @@ const JobPage = () => {
         source={job?.requirements}
         className="bg-transparent text-lg"
       />
+
+      {/* render application*/}
+      
     </div>
   );
 };

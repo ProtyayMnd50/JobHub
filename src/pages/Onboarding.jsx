@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
-import { BarLoader, HashLoader } from "react-spinners";
+import { BarLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 const Onboarding = () => {

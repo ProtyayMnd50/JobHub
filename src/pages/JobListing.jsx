@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getJobs } from "@/api/apiJobs";
-import { useSession, useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 import useFetch from "@/hooks/use-fetch";
 import { BarLoader } from "react-spinners";
 import JobCard from "@/components/job-card";
@@ -12,11 +12,10 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { State, City } from "country-state-city";
+import { State } from "country-state-city";
 
 // console.log(State.getStatesOfCountry("IN"));
 // console.log(City.getCitiesOfState("IN", "TG"));
