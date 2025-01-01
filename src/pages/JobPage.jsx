@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ApplyJobDrawer from "@/components/apply-job";
 const JobPage = () => {
   const { isLoaded, user } = useUser();
   const { id } = useParams();
@@ -75,7 +76,7 @@ const JobPage = () => {
         </div>
       </div>
       {/* hiring status */}
-      {!loadingHiringStatus && <BarLoader width={"100%"} color="#36d7b7" />}
+      {/* {!loadingHiringStatus && <BarLoader width={"100%"} color="#36d7b7" />} */}
       {job?.recruiter_id === user?.id && (
         <Select value={location} onValueChange={handleStatusChange}>
           <SelectTrigger
@@ -105,7 +106,15 @@ const JobPage = () => {
       />
 
       {/* render application*/}
-      
+      {job?.recruiter_id !== user?.id && (
+        <ApplyJobDrawer
+          job={job}
+          user={user}
+          fetchJob={fnJob}
+          applied={job?.applications?.find((ap) => ap.candidate_id === user.id)}
+        />
+        //if the user has already applied case check in the above line
+      )}
     </div>
   );
 };

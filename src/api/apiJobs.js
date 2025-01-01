@@ -2,9 +2,9 @@ import supabaseClient from "@/utils/supabase";
 import { State, City } from "country-state-city";
 
 export async function getJobs(token, { location, company_id, searchQuery }) {
-  console.log(location);
-  console.log(company_id);
-  console.log(searchQuery);
+  // console.log(location);
+  // console.log(company_id);
+  // console.log(searchQuery);
   const states = State.getStatesOfCountry("IN"); //all states of country
 
   const statesnCode = [...states.map((state) => [state.name, state.isoCode])];
@@ -16,8 +16,8 @@ export async function getJobs(token, { location, company_id, searchQuery }) {
   const allstatesofCities = City.getCitiesOfState("IN", locationISO); //get all cities of states object format
   const sirfcities = allstatesofCities.map((state) => state.name); //all state names
   if (location === "Karnataka") sirfcities.push("Bangalore");
-  console.log(locationISO);
-  console.log(sirfcities);
+  // console.log(locationISO);
+  // console.log(sirfcities);
   const supabase = await supabaseClient(token);
 
   let query = supabase
