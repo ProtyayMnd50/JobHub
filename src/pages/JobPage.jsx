@@ -31,6 +31,7 @@ const JobPage = () => {
     updateHiringStatus,
     { job_id: id }
   );
+
   const handleStatusChange = (value) => {
     const isOpen = value === "open";
     fnHiringStatus(isOpen).then(() => fnJob());
@@ -78,14 +79,14 @@ const JobPage = () => {
       {/* hiring status */}
       {/* {!loadingHiringStatus && <BarLoader width={"100%"} color="#36d7b7" />} */}
       {job?.recruiter_id === user?.id && (
-        <Select value={location} onValueChange={handleStatusChange}>
+        <Select onValueChange={handleStatusChange}>
           <SelectTrigger
             className={`w-full ${job?.isOpen ? "bg-green-950" : "bg-red-950"}`}
           >
             <SelectValue
-              placeholder={
-                "Hiring status" + (job?.isOpen ? "(Open )" : "(Closed)")
-              }
+              placeholder={`Hiring status ${
+                job?.isOpen ? "(Open)" : "(Closed)"
+              }`}
             />
           </SelectTrigger>
           <SelectContent>
