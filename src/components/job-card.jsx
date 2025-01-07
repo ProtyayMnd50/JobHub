@@ -63,10 +63,10 @@ const JobCard = ({
         {job.description.substring(0, job.description.indexOf("."))}
         {/* please tell user to end sentences with fullstops */}
       </CardContent>
-      <CardFooter className="flex gap-2">
+      <CardFooter className="flex gap-2 ">
         {/* made changes in this line please revert it it to  -> <Link to={`/job/${job.id}`} className="flex-1"></Link> */}
         <Link to={`/job/${job.id}`} className="flex-1">
-          <Button variant="secondary" className="w-full">
+          <Button variant="secondary" className="w-full m-2">
             More Details
           </Button>
           {!isMyJob && (
