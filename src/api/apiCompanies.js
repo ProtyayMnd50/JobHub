@@ -1,4 +1,4 @@
-import supabaseClient from "@/utils/supabase";
+import supabaseClient, { supabaseUrl } from "@/utils/supabase";
 export async function getCompanies(token) {
   const supabase = await supabaseClient(token);
   const { data, error } = await supabase.from("companies").select("*");
@@ -38,7 +38,7 @@ export async function addNewCompany(token, _, companyData) {
 
   if (error) {
     console.error(error);
-    throw new Error("Error submitting Companys");
+    throw new Error("Error submitting Company");
   }
 
   return data;
