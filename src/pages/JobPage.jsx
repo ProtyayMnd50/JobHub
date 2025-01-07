@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { getSingleJob, updateHiringStatus } from "@/api/apiJobs";
 import useFetch from "@/hooks/use-fetch";
 import { useUser } from "@clerk/clerk-react";

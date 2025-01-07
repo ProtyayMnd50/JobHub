@@ -10,9 +10,10 @@ import {
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { MapPinIcon, Trash2Icon, Heart } from "lucide-react";
-import { saveJob } from "@/api/apiJobs";
+import { saveJob, deleteJob } from "@/api/apiJobs";
 import useFetch from "@/hooks/use-fetch";
 import { useEffect, useState } from "react";
+import { BarLoader } from "react-spinners";
 const JobCard = ({
   job,
   isMyJob = false,
@@ -37,16 +38,31 @@ const JobCard = ({
   useEffect(() => {
     if (savedJob !== undefined) setSaved(savedJob?.length > 0);
   }, [savedJob]);
+
+  const { loading: loadingDeleteJob, fn: fnDeleteJob } = useFetch(deleteJob, {
+    job_id: job.id,
+  });
+
+  const handleDeleteJob = async () => {
+    await fnDeleteJob();
+    // onJobAction();
+    onJobSaved();
+  };
   return (
     <Card className="flex flex-col">
+      {loadingDeleteJob && (
+        <BarLoader className="mt-4" width={"100%"} color="#36d7b7" />
+      )}
       <CardHeader className="flex">
         <CardTitle className="flex justify-between font-bold">
           {job.title}
-          {!isMyJob && (
+
+          {isMyJob && (
             <Trash2Icon
               fill="red"
               size={18}
               className="text-red-300 cursor-pointer"
+              onClick={handleDeleteJob}
             />
           )}
         </CardTitle>

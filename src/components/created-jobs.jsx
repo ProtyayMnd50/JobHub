@@ -33,7 +33,8 @@ const CreatedJobs = () => {
                 <JobCard
                   key={job.id}
                   job={job}
-                  onJobAction={fnCreatedJobs}
+                  //   onJobAction={fnCreatedJobs}
+                  onJobSaved={fnCreatedJobs}
                   isMyJob
                 />
               );

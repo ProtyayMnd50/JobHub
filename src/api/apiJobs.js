@@ -171,7 +171,7 @@ export async function getMyJobs(token, { recruiter_id }) {
   return data;
 }
 
-// Delete job: for recruiter
+// Delete job
 export async function deleteJob(token, { job_id }) {
   const supabase = await supabaseClient(token);
 
@@ -182,7 +182,7 @@ export async function deleteJob(token, { job_id }) {
     .select();
 
   if (deleteError) {
-    console.error("Error deleting job:", deleteError);
+    console.error("Error deleting job", deleteError);
     return data;
   }
 
