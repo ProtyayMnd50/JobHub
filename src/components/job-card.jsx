@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useUser } from "@clerk/clerk-react";
 import {
   Card,
@@ -60,6 +61,7 @@ const JobCard = ({
         </div>
         <hr />
         {job.description.substring(0, job.description.indexOf("."))}
+        {/* please tell user to end sentences with fullstops */}
       </CardContent>
       <CardFooter className="flex gap-2">
         {/* made changes in this line please revert it it to  -> <Link to={`/job/${job.id}`} className="flex-1"></Link> */}
