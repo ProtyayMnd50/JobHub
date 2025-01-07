@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ApplyJobDrawer from "@/components/apply-job";
+
+import ApplicationCard from "@/components/application-card";
 const JobPage = () => {
   const { isLoaded, user } = useUser();
   const { id } = useParams();
@@ -43,8 +45,7 @@ const JobPage = () => {
   if (!isLoaded) {
     return <div>Loading...</div>;
   }
-  // console.log(job);
-  // console.log(typeof job);
+  console.log(job);
 
   return (
     <div className="flex flex-col gap-8 mt-5 ">
@@ -107,6 +108,7 @@ const JobPage = () => {
       />
 
       {/* render application*/}
+
       {job?.recruiter_id !== user?.id && (
         <ApplyJobDrawer
           job={job}
@@ -115,6 +117,18 @@ const JobPage = () => {
           applied={job?.applications?.find((ap) => ap.candidate_id === user.id)}
         />
         //if the user has already applied case check in the above line
+      )}
+      {/* displaying the applications if user is a recruiter */}
+
+      {job?.applications?.length > 0 && job?.recruiter_id === user?.id && (
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-bold">Applications</h2>
+          {job?.applications.map((application) => {
+            return (
+              <ApplicationCard key={application.id} application={application} />
+            );
+          })}
+        </div>
       )}
     </div>
   );

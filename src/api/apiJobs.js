@@ -47,33 +47,6 @@ export async function getJobs(token, { location, company_id, searchQuery }) {
 
   return data;
 }
-// export async function saveJob(token, { alreadySaved }, saveData) {
-//   const supabase = await supabaseClient(token);
-//   if (alreadySaved) {
-//     const { data, error: deleteError } = await supabase
-//       .from("saved_jobs")
-//       .delete()
-//       .eq("job_id", saveData.job_id);
-
-//     if (deleteError) {
-//       console.error("Error deleting saved jobs ", deleteError);
-//       return null;
-//     }
-//     return data;
-//   } else {
-//     const { data, error: insertError } = await supabase
-//       .from("saved_jobs")
-//       .insert([saveData])
-//       .select();
-
-//     if (insertError) {
-//       console.error("Error inserting saved jobs ", insertError);
-//       return null;
-//     }
-
-//     return data;
-//   }
-// }
 
 //redefined savedjobs from GPT
 
@@ -145,6 +118,22 @@ export async function updateHiringStatus(token, { job_id }, isOpen) {
   if (error) {
     console.error("error updating job", error);
     return null;
+  }
+
+  return data;
+}
+//post job functionality
+export async function addNewJob(token, _, jobData) {
+  const supabase = await supabaseClient(token);
+
+  const { data, error } = await supabase
+    .from("jobs")
+    .insert([jobData])
+    .select();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Error Creating Job");
   }
 
   return data;
