@@ -122,7 +122,7 @@ export async function updateHiringStatus(token, { job_id }, isOpen) {
 
   return data;
 }
-//post job functionality
+//post job functionality: for recruiter
 export async function addNewJob(token, _, jobData) {
   const supabase = await supabaseClient(token);
 
@@ -148,6 +148,23 @@ export async function getSavedJobs(token) {
 
   if (error) {
     console.error("Error fetching Saved Jobs:", error);
+    return null;
+  }
+
+  return data;
+}
+
+// get my created jobs: for recruiter
+export async function getMyJobs(token, { recruiter_id }) {
+  const supabase = await supabaseClient(token);
+
+  const { data, error } = await supabase
+    .from("jobs")
+    .select("*, company: companies(name,logo_url)")
+    .eq("recruiter_id", recruiter_id);
+
+  if (error) {
+    console.error("Error fetching Jobs:", error);
     return null;
   }
 
